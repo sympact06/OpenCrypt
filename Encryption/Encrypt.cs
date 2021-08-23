@@ -15,7 +15,7 @@ namespace Encryption
 
             try
             {
-                string password = @"test1234"; // Your Key Here
+                string password = @"u7x!A%D*G-KaPdSgVkYp3s6v9y$B?E(H+MbQeThWmZq4t7w!z%C*F)J@NcRfUjXn2r5u8x/A?D(G+KaPdSgVkYp3s6v9y$B&E)H@";
                 UnicodeEncoding UE = new UnicodeEncoding();
                 byte[] key = UE.GetBytes(password);
 
@@ -49,7 +49,7 @@ namespace Encryption
         {
 
             {
-                string password = @"test1234"; // Your Key Here
+                string password = @"u7x!A%D*G-KaPdSgVkYp3s6v9y$B?E(H+MbQeThWmZq4t7w!z%C*F)J@NcRfUjXn2r5u8x/A?D(G+KaPdSgVkYp3s6v9y$B&E)H@"; 
 
                 UnicodeEncoding UE = new UnicodeEncoding();
                 byte[] key = UE.GetBytes(password);
