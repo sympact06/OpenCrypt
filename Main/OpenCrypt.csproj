@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <IsPublishable>False</IsPublishable>
+    <SignAssembly>False</SignAssembly>
+    <Authors>Olivier flentge</Authors>
+    <Description>OpenCrypt is een OpenSourced AES encryptie</Description>
+    <Copyright>©Sympactdev</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Encryption\Encryption.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Encryption">
+      <HintPath>bin\Debug\net5.0\Encryption.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

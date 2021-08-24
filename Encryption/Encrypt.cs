@@ -12,11 +12,14 @@ namespace Encryption
 
     public class EncryptDLL
     {
-
+        //  Call this function to remove the key from memory after use for security
         [DllImport("KERNEL32.DLL", EntryPoint = "RtlZeroMemory")]
         public static extern bool ZeroMemory(IntPtr Destination, int Length);
 
-
+        /// <summary>
+        /// Creates a random salt that will be used to encrypt your file. This method is required on FileEncrypt.
+        /// </summary>
+        /// <returns></returns>
         public static byte[] GenerateRandomSalt()
         {
             byte[] data = new byte[32];
@@ -33,7 +36,11 @@ namespace Encryption
             return data;
         }
 
-
+        /// <summary>
+        /// Encrypts a file from its path and a plain password.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="password"></param>
         public void FileEncrypt(string inputFile, string password)
         {
             //http://stackoverflow.com/questions/27645527/aes-encryption-on-large-files
@@ -42,7 +49,7 @@ namespace Encryption
             byte[] salt = GenerateRandomSalt();
 
             //create output file name
-            FileStream fsCrypt = new FileStream("Data.aes", FileMode.Create);
+            FileStream fsCrypt = new FileStream(inputFile + ".aes", FileMode.Create);
 
             //convert password string to byte arrray
             byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
@@ -94,7 +101,13 @@ namespace Encryption
             }
         }
 
-        private void FileDecrypt(string inputFile, string outputFile, string password)
+        /// <summary>
+        /// Decrypts an encrypted file with the FileEncrypt method through its path and the plain password.
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="outputFile"></param>
+        /// <param name="password"></param>
+        public void FileDecrypt(string inputFile, string outputFile, string password)
         {
             byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
             byte[] salt = new byte[32];
