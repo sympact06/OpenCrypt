@@ -12,15 +12,11 @@ namespace Encryption
 
     public class EncryptDLL
     {
-        //  Call this function to remove the key from memory after use for security
         [DllImport("KERNEL32.DLL", EntryPoint = "RtlZeroMemory")]
         public static extern bool ZeroMemory(IntPtr Destination, int Length);
 
-        /// <summary>
-        /// Creates a random salt that will be used to encrypt your file. This method is required on FileEncrypt.
-        /// </summary>
-        /// <returns></returns>
-        public static byte[] GenerateRandomSalt()
+
+        public static byte[] MaakRandomSalt()
         {
             byte[] data = new byte[32];
 
@@ -28,7 +24,6 @@ namespace Encryption
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    // Fille the buffer with the generated data
                     rng.GetBytes(data);
                 }
             }
@@ -36,47 +31,33 @@ namespace Encryption
             return data;
         }
 
-        /// <summary>
-        /// Encrypts a file from its path and a plain password.
-        /// </summary>
-        /// <param name="inputFile"></param>
-        /// <param name="password"></param>
         public void FileEncrypt(string inputFile, string password)
         {
-            //http://stackoverflow.com/questions/27645527/aes-encryption-on-large-files
 
-            //generate random salt
-            byte[] salt = GenerateRandomSalt();
+            byte[] salt = MaakRandomSalt();
 
-            //create output file name
-            FileStream fsCrypt = new FileStream(inputFile + ".aes", FileMode.Create);
+            FileStream fsCrypt = new FileStream("Data" + ".opencrypt", FileMode.Create);
 
-            //convert password string to byte arrray
             byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
 
-            //Set Rijndael symmetric encryption algorithm
             RijndaelManaged AES = new RijndaelManaged();
             AES.KeySize = 256;
             AES.BlockSize = 128;
             AES.Padding = PaddingMode.PKCS7;
-
-            //http://stackoverflow.com/questions/2659214/why-do-i-need-to-use-the-rfc2898derivebytes-class-in-net-instead-of-directly
-            //"What it does is repeatedly hash the user password along with the salt." High iteration counts.
+    
+          
             var key = new Rfc2898DeriveBytes(passwordBytes, salt, 50000);
             AES.Key = key.GetBytes(AES.KeySize / 8);
             AES.IV = key.GetBytes(AES.BlockSize / 8);
 
-            //Cipher modes: http://security.stackexchange.com/questions/52665/which-is-the-best-cipher-mode-and-padding-mode-for-aes-encryption
             AES.Mode = CipherMode.CFB;
 
-            // write salt to the begining of the output file, so in this case can be random every time
             fsCrypt.Write(salt, 0, salt.Length);
 
             CryptoStream cs = new CryptoStream(fsCrypt, AES.CreateEncryptor(), CryptoStreamMode.Write);
 
             FileStream fsIn = new FileStream(inputFile, FileMode.Open);
 
-            //create a buffer (1mb) so only this amount will allocate in the memory and not the whole file
             byte[] buffer = new byte[1048576];
             int read;
 
@@ -87,7 +68,6 @@ namespace Encryption
                     cs.Write(buffer, 0, read);
                 }
 
-                // Close up
                 fsIn.Close();
             }
             catch (Exception ex)
@@ -101,12 +81,6 @@ namespace Encryption
             }
         }
 
-        /// <summary>
-        /// Decrypts an encrypted file with the FileEncrypt method through its path and the plain password.
-        /// </summary>
-        /// <param name="inputFile"></param>
-        /// <param name="outputFile"></param>
-        /// <param name="password"></param>
         public void FileDecrypt(string inputFile, string outputFile, string password)
         {
             byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
