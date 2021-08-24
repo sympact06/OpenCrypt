@@ -3,6 +3,8 @@ using System.Security.Cryptography;
 using System.IO;
 using Encryption;
 using System.IO.Compression;
+using System.Linq;
+
 namespace Main
 {
 
@@ -11,41 +13,36 @@ namespace Main
     {
 
 
-
+        private static Random random = new Random();
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
 
         static void Main(string[] args)
         {
-            EncryptDLL encryptie = new EncryptDLL();
-
-
-            Console.WriteLine("Bestand word gezipt");
-            
-            
-            // VAR VOOR DATA PATHS
+            EncryptDLL yeboi = new EncryptDLL();
             string datafolder = @".\Data";
             string datafolder1 = @".\Data\Secured.zip";
             string outputdata = @".\DataZip\Encryptdit.zip";
+            string olddata = @".\DataZip\OLD.zip";
             string SecuredData = @".\Secured\Data.txt";
             string DecryptedData = @".\Decrypt\Data.zip";
             System.IO.DirectoryInfo datafol = new DirectoryInfo(@".\Data");
-
-
-            if (File.Exists(outputdata)) { File.Delete(outputdata); }
+            if (File.Exists(outputdata)){
+                string oldname = RandomString(20)+".zip";
+                Console.WriteLine("Er is een oude zip gevonden! Hij word renamed naar " + oldname);
+                File.Move(outputdata, @".\DataZip\"+oldname);
+                File.Delete(outputdata);
+            }
             ZipFile.CreateFromDirectory(datafolder, outputdata);
-            // Verwijderd Alle UnEncrypted Shit
-            encryptie.EncryptFile(outputdata, SecuredData);
-            File.Copy(SecuredData, datafolder1);
-            foreach (FileInfo file in datafol.GetFiles())
-            {
-                file.Delete();
-            }
-            foreach (DirectoryInfo dir in datafol.GetDirectories())
-            {
-                dir.Delete(true);
-            }
-            if (File.Exists(outputdata)) { File.Delete(outputdata); }
+            yeboi.FileEncrypt(outputdata, "noob");
+            
 
-            encryptie.DecryptFile(SecuredData, DecryptedData);
+
+            
         }
 
 
@@ -53,4 +50,3 @@ namespace Main
 
     }
 }
-
