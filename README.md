@@ -13,7 +13,7 @@ OpenCrypt is een AES Methode die gemaakt is in C# En C++. Dit programma is 100% 
 - Geoptimaliseerd! 
 - Een WebAPI in PHP die de keys opslaat 
 - Een geavanceerd backup systeem waardoor je files niet corrupt worden!
-- Windows 10 21H2 is  supported
+- Windows 11 21H2 is  supported
 - Upcoming Support for .NET 6.0
 
 Dit project is gemaakt door 2 Studenten. 
