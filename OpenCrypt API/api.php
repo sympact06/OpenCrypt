@@ -1,7 +1,7 @@
 <?php
 $token = define(getenv('key'), false);
 
-if($_POST["key"] == $token){
+if($_GET["key"] == $token){
     return True;
 }
 else{
