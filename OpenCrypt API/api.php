@@ -1,2 +1,2 @@
 <?php
-include 'ext/resolve'
+include 'ext/resolve';
