@@ -1,2 +1,2 @@
 <?php
-include 'adm/changeenv';
+include 'ext/editenv';
