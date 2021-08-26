@@ -1,3 +1,4 @@
+![GitHub](https://img.shields.io/github/license/SympactDev/OpenCrypt?style=flat-square)
 # OpenCrypt
 ## _ AES Encryptie Methode In het Twents_
 
