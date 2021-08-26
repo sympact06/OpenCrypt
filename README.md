@@ -32,6 +32,7 @@ Om de nieuwste developers source te downloaden van OpenCrypt, heb je [Git](https
 
 Vervolgens open je het mapje en kan je als je Visual studio hebt (Wij gebruikte 2022) het project openen met de sln file.
 *Wij checken wekelijks pull requests!*
-
+## _Selfhost API_
+Voor meer info over de API, check de readme in de API directory.
 
 
