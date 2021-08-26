@@ -9,7 +9,7 @@ def main():
     prnt()
     print("Insert new auth key")
     key = input("> ")
-    requests.post('{url}/admin.php?ADMIN_TOKEN={token}?key={key}')
+    requests.post(f'{url}/admin.php?ADMIN_TOKEN={token}?key={key}')
 def prnt():
     var = """
     ###############################################
