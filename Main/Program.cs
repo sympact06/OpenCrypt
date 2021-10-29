@@ -21,7 +21,7 @@ namespace Main
         static void Main(string[] args)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
-            EncryptDLL yeboi = new();
+           // EncryptDLL yeboi = new();
             string datafolder = @".\Data";
             string cryptfolder = @".\OpenCrypt";
             //string datafolder1 = @".\Data\Secured.zip";
@@ -127,7 +127,7 @@ namespace Main
             BackupMaak();
             ZipFile.CreateFromDirectory(@".\Data", @".\OpenCrypt\temp\Encryptdit.zip");
             BackupMaak2();
-            yeboi.FileEncrypt(@".\OpenCrypt\temp\Encryptdit.zip", "wachtwoorxlol");
+            EncryptDLL.FileEncrypt(@".\OpenCrypt\temp\Encryptdit.zip", "wachtwoorxlol");
             Console.WriteLine("encrypted");
             File.Delete(@".\OpenCrypt\temp\Encryptdit.zip");
             foreach (FileInfo file in datafol.GetFiles()) { file.Delete(); }
