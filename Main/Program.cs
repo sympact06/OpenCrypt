@@ -1,21 +1,15 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using EncryptionNew;
+using System;
 using System.IO;
-using Encryption;
 using System.IO.Compression;
 using System.Linq;
-using System.Timers;
-using System.Windows;
 using System.Net;
 namespace Main
 {
-
-
-    class Program
+    public class Program
     {
-
-
-        private static Random random = new Random();
+        private static readonly Random random = new();
+        
         public static string RandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -23,19 +17,19 @@ namespace Main
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-  
-
+#pragma warning disable IDE0060 // Remove unused parameter
         static void Main(string[] args)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
-            EncryptDLL yeboi = new EncryptDLL();
+           // EncryptDLL yeboi = new();
             string datafolder = @".\Data";
             string cryptfolder = @".\OpenCrypt";
-            string datafolder1 = @".\Data\Secured.zip";
-            string outputdata = @".\OpenCrypt\temp\Encryptdit.zip";
-            string olddata = @".\DataZip\OLD.zip";
-            string SecuredData = @".\Secured\Data.txt";
-            string DecryptedData = @".\Decrypt\Data.zip";
-            System.IO.DirectoryInfo datafol = new DirectoryInfo(@".\Data");
+            //string datafolder1 = @".\Data\Secured.zip";
+            //string outputdata = @".\OpenCrypt\temp\Encryptdit.zip";
+            //string olddata = @".\DataZip\OLD.zip";
+            //string SecuredData = @".\Secured\Data.txt";
+            //string DecryptedData = @".\Decrypt\Data.zip";
+            DirectoryInfo datafol = new(@".\Data");
             bool backup = false;
             void BackupMaak()
             {
@@ -50,7 +44,7 @@ namespace Main
                     foreach (string file in files)
                     {
 
-                        FileInfo fi = new FileInfo(file);
+                        FileInfo fi = new(file);
                         if (fi.LastAccessTime < DateTime.Now.AddDays(-10))
                             Console.WriteLine("Er zijn backups gevonden die ouder zijn dan 10 Dagen. Deze worden automatisch verwijderd om data te besparen!");
                             fi.Delete();
@@ -68,7 +62,6 @@ namespace Main
 
                         string oldname = RandomString(20) + "-AUTO.zip";
                         File.Copy(@".\OpenCrypt\temp\Encryptdit.zip", @".\OpenCrypt\backups\" + oldname);
-                        backup = true;
                     }
                 }
             }
@@ -79,23 +72,24 @@ namespace Main
             Console.WriteLine("");
 
             //CHECK FOLDERS
-            if (!Directory.Exists(datafolder)) { Console.WriteLine("Er was geen Data folder gevonden. Bevestig dat de folder echt Data heette.. Voor nu heb ik de Data folder aangemaakt"); Directory.CreateDirectory(@".\Data"); System.Environment.Exit(666); }
+            if (!Directory.Exists(datafolder)) { Console.WriteLine("Er was geen Data folder gevonden. Bevestig dat de folder echt Data heette.. Voor nu heb ik de Data folder aangemaakt"); _ = Directory.CreateDirectory(@".\Data"); System.Environment.Exit(666); }
+           
             if (!Directory.Exists(cryptfolder))
             {
                 Console.WriteLine("Het lijkt erop dat dit de eerste keer is dat je OpenCrypt gebruikt We maken nu alle nodige files..");
-                Directory.CreateDirectory(@".\OpenCrypt");
+                _ = Directory.CreateDirectory(@".\OpenCrypt");
                
             }
 
-            if (!Directory.Exists(@".\OpenCrypt\temp")) { Directory.CreateDirectory(@".\OpenCrypt\temp"); }
-            if (!Directory.Exists(@".\OpenCrypt\backups")) { Directory.CreateDirectory(@".\OpenCrypt\backups"); }
-            if (!Directory.Exists(@".\OpenCrypt\etc")) { Directory.CreateDirectory(@".\OpenCrypt\etc"); }
-            if (!Directory.Exists(@".\OpenCrypt\credits")) { Directory.CreateDirectory(@".\OpenCrypt\credits"); }
+            if (!Directory.Exists(@".\OpenCrypt\temp")) { _ = Directory.CreateDirectory(@".\OpenCrypt\temp"); }
+            if (!Directory.Exists(@".\OpenCrypt\backups")) { _ = Directory.CreateDirectory(@".\OpenCrypt\backups"); }
+            if (!Directory.Exists(@".\OpenCrypt\etc")) { _ = Directory.CreateDirectory(@".\OpenCrypt\etc"); }
+            if (!Directory.Exists(@".\OpenCrypt\credits")) { _ = Directory.CreateDirectory(@".\OpenCrypt\credits"); }
             if (!Directory.Exists(@".\OpenCrypt\credits")){}
             if (!File.Exists(@".\OpenCrypt\credits\credits.txt"))
             {
                 File.Create(@".\OpenCrypt\credits\credits.txt").Close();
-                StreamWriter sw = new StreamWriter(@".\OpenCrypt\credits\credits.txt");
+                using StreamWriter sw = new(@".\OpenCrypt\credits\credits.txt");
                 sw.WriteLine("OPENCRYPT AES");
                 sw.WriteLine("https://github.com/SympactDev/OpenCrypt");
                 sw.WriteLine();
@@ -107,7 +101,7 @@ namespace Main
             if (!File.Exists(@".\OpenCrypt\temp\lol.txt"))
             {
                 File.Create(@".\OpenCrypt\temp\lol.txt").Close();
-                StreamWriter sw = new StreamWriter(@".\OpenCrypt\temp\lol.txt");
+                StreamWriter sw = new(@".\OpenCrypt\temp\lol.txt");
                 sw.WriteLine("Did you really thought we where stupid?");
                 sw.WriteLine("Did you really thought we where stupid?");
                 sw.WriteLine("Did you really thought we where stupid?");
@@ -118,8 +112,10 @@ namespace Main
             }
             if (!Directory.Exists(@".\OpenCrypt\dll"))
             {
-                Directory.CreateDirectory(@".\OpenCrypt\dll");  
-                using WebClient downloadclient = new WebClient();
+                _ = Directory.CreateDirectory(@".\OpenCrypt\dll");  
+                
+                using WebClient downloadclient = new();
+           
                 downloadclient.DownloadFile("https://cdn.discordapp.com/attachments/876164279382990909/879789837891289108/Encryption.dll", @".\OpenCrypt\dll\Encryption.dll");
                 downloadclient.DownloadFile("https://cdn.discordapp.com/attachments/876164279382990909/879789837891289108/Encryption.dll", @".\OpenCrypt\dll\base.opencrypt");
                 downloadclient.DownloadFile("https://cdn.discordapp.com/attachments/876164279382990909/879789837891289108/Encryption.dll", @".\OpenCrypt\dll\data.aes");
@@ -131,7 +127,7 @@ namespace Main
             BackupMaak();
             ZipFile.CreateFromDirectory(@".\Data", @".\OpenCrypt\temp\Encryptdit.zip");
             BackupMaak2();
-            yeboi.FileEncrypt(@".\OpenCrypt\temp\Encryptdit.zip", "wachtwoorxlol");
+            EncryptDLL.FileEncrypt(@".\OpenCrypt\temp\Encryptdit.zip", "wachtwoorxlol");
             Console.WriteLine("encrypted");
             File.Delete(@".\OpenCrypt\temp\Encryptdit.zip");
             foreach (FileInfo file in datafol.GetFiles()) { file.Delete(); }

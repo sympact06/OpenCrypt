@@ -1,51 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.IO;
-using System.Security.Cryptography;
 using System.Runtime.InteropServices;
-namespace Encryption
+
+namespace EncryptionNew
 {
 
     public class EncryptDLL
     {
         [DllImport("KERNEL32.DLL", EntryPoint = "RtlZeroMemory")]
-        public static extern bool ZeroMemory(IntPtr Destination, int Length);
-
+        private static extern bool ZeroMemory(IntPtr Destination, int Length);
 
         public static byte[] MaakRandomSalt()
         {
             byte[] data = new byte[32];
 
-            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
-            {
+            using (RNGCryptoServiceProvider rng = new())
                 for (int i = 0; i < 10; i++)
                 {
                     rng.GetBytes(data);
                 }
-            }
 
             return data;
         }
 
-        public void FileEncrypt(string inputFile, string password)
+        public static void FileEncrypt(string inputFile, string password)
         {
 
             byte[] salt = MaakRandomSalt();
 
-            FileStream fsCrypt = new FileStream("Data" + ".opencrypt", FileMode.Create);
+            using FileStream fsCrypt = new("Data" + ".opencrypt", FileMode.Create);
 
             byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
 
-            RijndaelManaged AES = new RijndaelManaged();
-            AES.KeySize = 256;
-            AES.BlockSize = 128;
-            AES.Padding = PaddingMode.PKCS7;
-    
-          
+            RijndaelManaged AES = new()
+            {
+                KeySize = 256,
+                BlockSize = 128,
+                Padding = PaddingMode.PKCS7
+            };
+
+
             var key = new Rfc2898DeriveBytes(passwordBytes, salt, 50000);
             AES.Key = key.GetBytes(AES.KeySize / 8);
             AES.IV = key.GetBytes(AES.BlockSize / 8);
@@ -54,9 +49,9 @@ namespace Encryption
 
             fsCrypt.Write(salt, 0, salt.Length);
 
-            CryptoStream cs = new CryptoStream(fsCrypt, AES.CreateEncryptor(), CryptoStreamMode.Write);
+            using CryptoStream cs = new(fsCrypt, AES.CreateEncryptor(), CryptoStreamMode.Write);
 
-            FileStream fsIn = new FileStream(inputFile, FileMode.Open);
+            using FileStream fsIn = new(inputFile, FileMode.Open);
 
             byte[] buffer = new byte[1048576];
             int read;
@@ -81,26 +76,29 @@ namespace Encryption
             }
         }
 
-        public void FileDecrypt(string inputFile, string outputFile, string password)
+        public static void FileDecrypt(string inputFile, string outputFile, string password)
         {
             byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
             byte[] salt = new byte[32];
 
-            FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
-            fsCrypt.Read(salt, 0, salt.Length);
+            using FileStream fsCrypt = new(inputFile, FileMode.Open);
+            _ = fsCrypt.Read(salt, 0, salt.Length);
 
-            RijndaelManaged AES = new RijndaelManaged();
-            AES.KeySize = 256;
-            AES.BlockSize = 128;
+            RijndaelManaged AES = new()
+            {
+                KeySize = 256,
+                BlockSize = 128
+            };
+
             var key = new Rfc2898DeriveBytes(passwordBytes, salt, 50000);
             AES.Key = key.GetBytes(AES.KeySize / 8);
             AES.IV = key.GetBytes(AES.BlockSize / 8);
             AES.Padding = PaddingMode.PKCS7;
             AES.Mode = CipherMode.CFB;
 
-            CryptoStream cs = new CryptoStream(fsCrypt, AES.CreateDecryptor(), CryptoStreamMode.Read);
+            using CryptoStream cs = new(fsCrypt, AES.CreateDecryptor(), CryptoStreamMode.Read);
 
-            FileStream fsOut = new FileStream(outputFile, FileMode.Create);
+            using FileStream fsOut = new(outputFile, FileMode.Create);
 
             int read;
             byte[] buffer = new byte[1048576];
@@ -123,7 +121,7 @@ namespace Encryption
 
             try
             {
-                cs.Close();
+                cs?.Close();
             }
             catch (Exception ex)
             {
@@ -131,8 +129,8 @@ namespace Encryption
             }
             finally
             {
-                fsOut.Close();
-                fsCrypt.Close();
+                fsOut?.Close();
+                fsCrypt?.Close();
             }
         }
 
