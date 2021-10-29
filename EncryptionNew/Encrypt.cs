@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Encryption
+namespace EncryptionNew
 {
 
     public class EncryptDLL

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Security.Cryptography;
+﻿using EncryptionNew;
+using System;
 using System.IO;
-using Encryption;
 using System.IO.Compression;
 using System.Linq;
-using System.Timers;
-using System.Windows;
 using System.Net;
 namespace Main
 {
