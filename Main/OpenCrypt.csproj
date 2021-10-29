@@ -15,9 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Encryption">
-      <HintPath>bin\Debug\net5.0\Encryption.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Encryption\Encryption.csproj" />
   </ItemGroup>
 
 </Project>

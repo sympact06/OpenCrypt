@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.IO;
-using System.Security.Cryptography;
 using System.Runtime.InteropServices;
+
 namespace Encryption
 {
 
@@ -14,7 +10,6 @@ namespace Encryption
     {
         [DllImport("KERNEL32.DLL", EntryPoint = "RtlZeroMemory")]
         public static extern bool ZeroMemory(IntPtr Destination, int Length);
-
 
         public static byte[] MaakRandomSalt()
         {
@@ -40,12 +35,14 @@ namespace Encryption
 
             byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
 
-            RijndaelManaged AES = new RijndaelManaged();
-            AES.KeySize = 256;
-            AES.BlockSize = 128;
-            AES.Padding = PaddingMode.PKCS7;
-    
-          
+            RijndaelManaged AES = new RijndaelManaged
+            {
+                KeySize = 256,
+                BlockSize = 128,
+                Padding = PaddingMode.PKCS7
+            };
+
+
             var key = new Rfc2898DeriveBytes(passwordBytes, salt, 50000);
             AES.Key = key.GetBytes(AES.KeySize / 8);
             AES.IV = key.GetBytes(AES.BlockSize / 8);
@@ -87,11 +84,14 @@ namespace Encryption
             byte[] salt = new byte[32];
 
             FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
-            fsCrypt.Read(salt, 0, salt.Length);
+            _ = fsCrypt.Read(salt, 0, salt.Length);
 
-            RijndaelManaged AES = new RijndaelManaged();
-            AES.KeySize = 256;
-            AES.BlockSize = 128;
+            RijndaelManaged AES = new RijndaelManaged
+            {
+                KeySize = 256,
+                BlockSize = 128
+            };
+
             var key = new Rfc2898DeriveBytes(passwordBytes, salt, 50000);
             AES.Key = key.GetBytes(AES.KeySize / 8);
             AES.IV = key.GetBytes(AES.BlockSize / 8);
@@ -123,7 +123,7 @@ namespace Encryption
 
             try
             {
-                cs.Close();
+                cs?.Close();
             }
             catch (Exception ex)
             {
@@ -131,8 +131,8 @@ namespace Encryption
             }
             finally
             {
-                fsOut.Close();
-                fsCrypt.Close();
+                fsOut?.Close();
+                fsCrypt?.Close();
             }
         }
 
