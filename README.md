@@ -1,6 +1,6 @@
 ![GitHub](https://img.shields.io/github/license/SympactDev/OpenCrypt?style=flat-square) ![GitHub all releases](https://img.shields.io/github/downloads/SympactDev/OpenCrypt/total?style=flat-square) ![GitHub top language](https://img.shields.io/github/languages/top/SympactDev/OpenCrypt?style=flat-square) ![Discord](https://img.shields.io/discord/880411861202403361?style=flat-square)
 # OpenCrypt
-## _ AES Encryptie Methode In het Twents_
+## _AES Encryptie Methode In het Twents_
 
 
 
